@@ -4,11 +4,60 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Audio Recording</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
         <script src="{{ url_for('static', filename='recorder.min.js') }}"></script>
+        <style>
+
+        </style>
     </head>
     <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <button id="start-btn" type="button" class="btn btn-primary">Start</button>
+                    <button id="stop-btn" type="button" class="btn btn-primary">Stop</button>
+                </div>
+            </div>
+        </div>
         <script type="text/javascript">
          var rec = new Recorder({"encoderPath": "/static/encoderWorker.min.js"});
+
+         var start_btn = document.getElementById("start-btn");
+         var stop_btn = document.getElementById("stop-btn");
+
+         start_btn.addEventListener("click", (e) => {
+             console.log("Start");
+             rec.start();
+         });
+         stop_btn.addEventListener("click", (e) => {
+             console.log("Stop");
+             rec.stop();
+         });
+
+         rec.ondataavailable = (typedArray) => {
+             console.log(typedArray);
+             var dataBlob = new Blob( [typedArray], { type: 'audio/wav' } );
+             var fileName = new Date().toISOString() + ".wav";
+             var url = URL.createObjectURL( dataBlob );
+
+             var form_data = new FormData();
+             form_data.append("audio_blob", dataBlob);
+		         $.ajax({
+			           url: '/',
+			           type: "POST",
+			           data: form_data,
+			           processData: false,
+			           contentType: false,
+			           success: function callback(response) {
+                    console.log(response);
+			           }
+		         });
+         };
         </script>
     </body>
 </html>

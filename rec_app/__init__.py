@@ -1,16 +1,17 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
         return render_template("index.html")
     elif request.method == "POST":
-        return render_template("index.html")
+        print(request.files)
+        return jsonify({"status": "successful"})
 
 
 if __name__ == "__main__":
