@@ -11,6 +11,8 @@ def index():
         return render_template("index.html")
     elif request.method == "POST":
         print(request.files)
+        fi = request.files["audio_blob"]
+        fi.save("upload-file.wav")
         return jsonify({"status": "successful"})
 
 
