@@ -14,7 +14,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.8",
     ],
-    author="Jumpyapple",
+    author="jumpyapple",
     author_email="70656949+jumpyapple@users.noreply.github.com",
     license="MIT",
     url="https://github.com/jumpyapple",
